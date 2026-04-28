@@ -1,0 +1,21 @@
+#contenedor{
+    background-color: orange;
+    border: 2px solid #333;
+}
+#cabecera{
+    background-color: blue;
+}
+#menu{
+    background-color: rgb(9, 255, 0);
+    float: left;
+    width: 15%;
+}
+#contenido{
+    background-color: rgb(0, 217, 255);
+    float: left;
+    width: 85%;
+}
+#pie{
+    background-color: rgb(255, 0, 13);
+    clear: both;
+}
