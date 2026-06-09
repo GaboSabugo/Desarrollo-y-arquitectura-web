@@ -1,162 +1,62 @@
-const campos = [
-    "nombre",
-    "email",
-    "password",
-    "repetirPassword",
-    "edad",
-    "telefono",
-    "direccion",
-    "ciudad",
-    "codigoPostal",
-    "dni"
-];
-
-function mostrarError(id, mensaje) {
-    document.getElementById("error-" + id).textContent = mensaje;
-    document.getElementById(id).classList.add("error-input");
-}
-
-function limpiarError(id) {
-    document.getElementById("error-" + id).textContent = "";
-    document.getElementById(id).classList.remove("error-input");
-}
-
-function validarCampo(id) {
-    let valor = document.getElementById(id).value.trim();
-
-    if (valor === "") {
-        mostrarError(id, "Este campo es obligatorio");
-        return false;
-    }
-
-    if (id === "nombre") {
-        if (valor.length <= 6 || !valor.includes(" ")) {
-            mostrarError(id, "Debe tener más de 6 letras y al menos un espacio");
-            return false;
-        }
-    }
-
-    if (id === "email") {
-        let expresion = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-        if (!expresion.test(valor)) {
-            mostrarError(id, "Debe ingresar un email válido");
-            return false;
-        }
-    }
-
-    if (id === "password") {
-        let tieneLetras = /[a-zA-Z]/.test(valor);
-        let tieneNumeros = /[0-9]/.test(valor);
-
-        if (valor.length < 8 || !tieneLetras || !tieneNumeros) {
-            mostrarError(id, "Debe tener al menos 8 caracteres, con letras y números");
-            return false;
-        }
-    }
-
-    if (id === "repetirPassword") {
-        let password = document.getElementById("password").value;
-
-        if (valor !== password) {
-            mostrarError(id, "Las contraseñas no coinciden");
-            return false;
-        }
-    }
-
-    if (id === "edad") {
-        let edad = Number(valor);
-
-        if (!Number.isInteger(edad) || edad < 18) {
-            mostrarError(id, "Debe ser un número entero mayor o igual a 18");
-            return false;
-        }
-    }
-
-    if (id === "telefono") {
-        let expresion = /^[0-9]{7,}$/;
-
-        if (!expresion.test(valor)) {
-            mostrarError(id, "Debe tener al menos 7 dígitos, sin espacios ni símbolos");
-            return false;
-        }
-    }
-
-    if (id === "direccion") {
-        let tieneLetras = /[a-zA-Z]/.test(valor);
-        let tieneNumeros = /[0-9]/.test(valor);
-
-        if (valor.length < 5 || !valor.includes(" ") || !tieneLetras || !tieneNumeros) {
-            mostrarError(id, "Debe tener letras, números y un espacio");
-            return false;
-        }
-    }
-
-    if (id === "ciudad") {
-        if (valor.length < 3) {
-            mostrarError(id, "Debe tener al menos 3 caracteres");
-            return false;
-        }
-    }
-
-    if (id === "codigoPostal") {
-        if (valor.length < 3) {
-            mostrarError(id, "Debe tener al menos 3 caracteres");
-            return false;
-        }
-    }
-
-    if (id === "dni") {
-        let expresion = /^[0-9]{7,8}$/;
-
-        if (!expresion.test(valor)) {
-            mostrarError(id, "Debe ser un número de 7 u 8 dígitos");
-            return false;
-        }
-    }
-
-    limpiarError(id);
-    return true;
-}
-
-campos.forEach(function(id) {
-    let campo = document.getElementById(id);
-
-    campo.addEventListener("blur", function() {
-        validarCampo(id);
-    });
-
-    campo.addEventListener("focus", function() {
-        limpiarError(id);
-    });
-});
-
 document.getElementById("formSuscripcion").addEventListener("submit", function(evento) {
     evento.preventDefault();
 
-    let errores = [];
-    let datos = [];
+    let nombre = document.getElementById("nombre").value.trim();
+    let email = document.getElementById("email").value.trim();
+    let password = document.getElementById("password").value.trim();
+    let repetirPassword = document.getElementById("repetirPassword").value.trim();
+    let edad = document.getElementById("edad").value.trim();
+    let telefono = document.getElementById("telefono").value.trim();
+    let direccion = document.getElementById("direccion").value.trim();
+    let ciudad = document.getElementById("ciudad").value.trim();
+    let codigoPostal = document.getElementById("codigoPostal").value.trim();
+    let dni = document.getElementById("dni").value.trim();
 
-    campos.forEach(function(id) {
-        let esValido = validarCampo(id);
-        let label = document.querySelector("label[for='" + id + "']").textContent;
-        let valor = document.getElementById(id).value.trim();
+    let errores = "";
 
-        if (!esValido) {
-            let error = document.getElementById("error-" + id).textContent;
-            errores.push(label + ": " + error);
-        } else {
-            if (id === "password" || id === "repetirPassword") {
-                datos.push(label + ": ********");
-            } else {
-                datos.push(label + ": " + valor);
-            }
-        }
-    });
+    if (nombre.length <= 6 || !nombre.includes(" ")) {
+        errores += "El nombre debe tener más de 6 letras y un espacio.\n";
+    }
 
-    if (errores.length > 0) {
-        alert("Hay errores en el formulario:\n\n" + errores.join("\n"));
+    if (!email.includes("@") || !email.includes(".")) {
+        errores += "El email no es válido.\n";
+    }
+
+    if (password.length < 8) {
+        errores += "La contraseña debe tener al menos 8 caracteres.\n";
+    }
+
+    if (password !== repetirPassword) {
+        errores += "Las contraseñas no coinciden.\n";
+    }
+
+    if (edad === "" || Number(edad) < 18) {
+        errores += "La edad debe ser mayor o igual a 18.\n";
+    }
+
+    if (telefono.length < 7 || isNaN(telefono)) {
+        errores += "El teléfono debe tener al menos 7 números.\n";
+    }
+
+    if (direccion.length < 5 || !direccion.includes(" ")) {
+        errores += "La dirección debe tener al menos 5 caracteres y un espacio.\n";
+    }
+
+    if (ciudad.length < 3) {
+        errores += "La ciudad debe tener al menos 3 caracteres.\n";
+    }
+
+    if (codigoPostal.length < 3) {
+        errores += "El código postal debe tener al menos 3 caracteres.\n";
+    }
+
+    if (dni.length < 7 || dni.length > 8 || isNaN(dni)) {
+        errores += "El DNI debe tener 7 u 8 números.\n";
+    }
+
+    if (errores !== "") {
+        alert("Hay errores en el formulario:\n\n" + errores);
     } else {
-        alert("Formulario enviado correctamente:\n\n" + datos.join("\n"));
+        alert("Formulario enviado correctamente");
     }
 });
